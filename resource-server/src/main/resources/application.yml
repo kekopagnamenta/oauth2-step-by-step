@@ -6,7 +6,7 @@ security:
  oauth2:
    resource:
      jwt:
-       keyUri: http://localhost:8080/auth/oauth/token_key
+       keyUri: http://authorization-server:8080/auth/oauth/token_key
 
 server:
   port: 9090
