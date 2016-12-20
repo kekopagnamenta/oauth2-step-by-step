@@ -9,4 +9,4 @@ security:
        keyUri: http://authorization-server:8080/auth/oauth/token_key
 
 server:
-  port: 9090
+  port: 8080

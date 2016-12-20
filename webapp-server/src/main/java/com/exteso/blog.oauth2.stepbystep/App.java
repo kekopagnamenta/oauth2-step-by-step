@@ -31,12 +31,12 @@ public class App {
 
     @RequestMapping(value = "/api/message", method = RequestMethod.GET)
     public Map<String, String> getMessage() {
-        return resourceServerProxy.getForObject("http://resource-server:9090", Map.class);
+        return resourceServerProxy.getForObject("http://resource-server:8080", Map.class);
     }
 
     @RequestMapping(value = "/api/message", method = RequestMethod.POST)
     public void saveMessage(@RequestBody String newMessage) {
-        resourceServerProxy.postForLocation("http://resource-server:9090", newMessage);
+        resourceServerProxy.postForLocation("http://resource-server:8080", newMessage);
     }
 
     @Configuration
