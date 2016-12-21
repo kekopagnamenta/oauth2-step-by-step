@@ -1,7 +1,10 @@
 package com.exteso.blog.oauth2.stepbystep;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -24,18 +27,24 @@ public class ResourceServer {
         SpringApplication.run(ResourceServer.class, args);
     }
 
-    private String message = "Hello world!";
+    @Autowired
+    private StringRedisTemplate template;
+
+    private String key = "oauth.demo.key";
 
     @PreAuthorize("#oauth2.hasScope('resource-server-read')")
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Map<String, String> home() {
-        return Collections.singletonMap("message", message);
+        ValueOperations<String, String> ops = this.template.opsForValue();
+        String message = ops.get(key);
+        return Collections.singletonMap("message", message.isEmpty() ? "no message" : message);
     }
 
     @PreAuthorize("#oauth2.hasScope('resource-server-write')")
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public void updateMessage(@RequestBody String message) {
-        this.message = message;
+        ValueOperations<String, String> ops = this.template.opsForValue();
+        ops.set(key, message);
     }
 
     @PreAuthorize("#oauth2.hasScope('resource-server-read')")
